@@ -2,6 +2,8 @@
 
 por Nestor Rodriguez Salgado
 
+# Creacionales
+
 ## Singleton
 
 ### Explicacion
@@ -895,3 +897,889 @@ Los posibles casos donde se puede usar son como creacion de diversos objetos cre
 
 1. Un ejemplo de esto el uso de preefabs en los videojuegos donde se crean objetos con los mismos atributos.
 2. Otro ejemplo, las celdas de excel, las podemos copiar con todo y su contenido, pegarlas y que se conserve sus caracteristicas.
+
+## Abstract factory
+
+### Explicacion
+
+Abstract factory consta en usar un grupo o familia  de objetos para poder construir un objeto de un tipo en especifico
+
+### Elementos
+
+Consta de un objeto base, un familia de objetos relacionada y una fabrica especifica para cada tipo de familia de objetos
+
+### Ejemplo
+
+#### Java
+
+```java
+public class principal{
+    public static void main(String[] args) {
+
+        PhoneH Fabrica1=new PhoneH();
+        PhoneL Fabrica2=new PhoneL();
+
+        Phone TelefonoGamaAlta = new Phone();
+        Phone TelefonoGamaBaja = new Phone();
+        //Telefono Gama Alta
+        TelefonoGamaAlta.setCamera(Fabrica1.CreateCamera());
+        TelefonoGamaAlta.setCarcasa(Fabrica1.CreateCase());
+        TelefonoGamaAlta.setPantalla(Fabrica1.CreateScreen());
+
+        TelefonoGamaAlta.getCamera().print();
+        TelefonoGamaAlta.getCarcasa().print();
+        TelefonoGamaAlta.getPantalla().print();
+
+        //Telefono Gama Baja
+        TelefonoGamaBaja.setCamera(Fabrica2.CreateCamera());
+        TelefonoGamaBaja.setCarcasa(Fabrica2.CreateCase());
+        TelefonoGamaBaja.setPantalla(Fabrica2.CreateScreen());
+        TelefonoGamaBaja.getCamera().print();
+        TelefonoGamaBaja.getCarcasa().print();
+        TelefonoGamaBaja.getPantalla().print();
+
+    }
+}
+
+```
+
+```java
+public class Phone {
+    private Screen Pantalla;
+    private Camera Camera;
+    private Case Carcasa;
+
+    public void setCamera(Camera camera) {
+        Camera = camera;
+    }
+
+    public void setCarcasa(Case carcasa) {
+        Carcasa = carcasa;
+    }
+
+    public void setPantalla(Screen pantalla) {
+        Pantalla = pantalla;
+    }
+
+    public Camera getCamera() {
+        return Camera;
+    }
+
+    public Case getCarcasa() {
+        return Carcasa;
+    }
+    
+    public Screen getPantalla() {
+        return Pantalla;
+    }
+}
+
+
+```
+
+```java
+public interface AbstracFactory{
+    public Screen CreateScreen();
+    public Camera CreateCamera();
+    public Case CreateCase();
+}
+
+```
+
+```java
+public class PhoneH implements AbstracFactory{
+    public Screen CreateScreen(){
+        return new ScreenOled();
+    }
+
+    public CameraUP CreateCamera(){
+        return new CameraUP();
+    }
+
+    public CarcasaAcero CreateCase(){
+        return new CarcasaAcero();
+    }
+
+}
+
+```
+
+```java
+public class PhoneL implements AbstracFactory{
+    public Screen CreateScreen(){
+        return new ScreenLCD();
+    }
+
+    public Camera CreateCamera(){
+        return new CameraDown();
+    }
+    
+    public Case CreateCase(){
+        return new CarcasaPlastica();
+    }
+}
+
+```
+
+```java
+public interface Camera{
+    public void print();
+}
+```
+
+```java
+public class CameraDown implements Camera{
+    public void print(){
+        System.out.println("Camera 5MPx");
+    }
+}
+```
+
+```java
+public class CameraUP implements Camera{
+    public void print(){
+        System.out.println("Camera 48MPx");
+    }
+}
+```
+
+```java
+public interface Case{
+    public void print();
+}
+```
+
+```java
+public class CarcasaAcero implements Case{
+    public void print(){
+        System.out.println("Carcasa Acero");
+    }
+}
+```
+
+```java
+public class CarcasaPlastica implements Case{
+    public void print(){
+        System.out.println("Carcasa Plastica");
+    }
+}
+```
+
+```java
+public interface Screen{
+    public void print();
+}
+```
+
+```java
+public class ScreenLCD implements Screen{
+    public void print(){
+        System.out.println("Screen LCD");
+    }
+}
+```
+
+```java
+public class ScreenOled implements Screen{
+    public void print(){
+        System.out.println("Screen Oled");
+    }
+}
+```
+
+#### Python
+
+```python
+import Telefono
+import Fabricas
+
+fabrica1=Fabricas.PhoneH()
+fabrica2=Fabricas.PhoneL()
+
+telefono1=Telefono.Phone()
+telefono2=Telefono.Phone()
+print("Telefono 1")
+print()
+telefono1.Camera=fabrica1.CreateCamera()
+telefono1.Pantalla=fabrica1.CreateScreen()
+telefono1.Carcasa=fabrica1.CreateCase()
+
+telefono1.Camera.Print()
+telefono1.Pantalla.Print()
+telefono1.Carcasa.Print()
+print()
+print("Telefono 2")
+print()
+telefono2.Camera=fabrica2.CreateCamera()
+telefono2.Pantalla=fabrica2.CreateScreen()
+telefono2.Carcasa=fabrica2.CreateCase()
+
+telefono2.Camera.Print()
+telefono2.Pantalla.Print()
+telefono2.Carcasa.Print()
+```
+
+```python
+from abc import abstractclassmethod
+import Piezas
+
+class AbstrasFactory:
+    @abstractclassmethod
+    def CreateScreen():
+        pass
+    @abstractclassmethod
+    def CreateCamera():
+        pass
+    @abstractclassmethod
+    def CreateCase():
+        pass
+
+class PhoneH(AbstrasFactory):
+    @staticmethod
+    def CreateScreen():
+        return Piezas.ScreenOled()
+    @staticmethod
+    def CreateCamera():
+        return Piezas.CameraUp()
+    @staticmethod
+    def CreateCase():
+        return Piezas.CarcasaAcero()
+
+class PhoneL(AbstrasFactory):
+    @staticmethod
+    def CreateScreen():
+        return Piezas.ScreenLCD()
+    @staticmethod
+    def CreateCamera():
+        return Piezas.CameraDown()
+    @staticmethod
+    def CreateCase():
+        return Piezas.CarcasaPlastico()
+```
+
+```python
+from abc import abstractclassmethod
+
+#Pantallas
+class Screen:
+    @abstractclassmethod
+    def Print():
+        pass
+class ScreenOled(Screen):
+    @staticmethod
+    def Print():
+        print("Screen Oled")
+
+class ScreenLCD(Screen):
+    @staticmethod
+    def Print():
+        print("Screen LCD")
+
+#Camaras
+class Camera:
+    @abstractclassmethod
+    def Print():
+        pass
+class CameraUp(Camera):
+    @staticmethod
+    def Print():
+        print("Camara 48MPX")
+
+class CameraDown(Camera):
+    @staticmethod
+    def Print():
+        print("Camara 4MPX")
+
+#Carcasas
+class Case:
+    @abstractclassmethod
+    def Print():
+        pass
+class CarcasaAcero(Case):
+    @staticmethod
+    def Print():
+        print("Camara 48MPX")
+
+class CarcasaPlastico(Case):
+    @staticmethod
+    def Print():
+        print("Camara 4MPX")
+```
+
+```python
+class Phone:
+    
+    Pantalla=None
+    Camera=None
+    Carcasa=None
+
+    def __init__(self) -> None:
+        pass
+```
+
+#### C++
+
+```cpp
+#include <bits/stdc++.h>
+#include "Telefono.cpp"
+
+using namespace std;
+
+int main() {
+    
+    Fabricas * fabrica1=new PhoneH();
+    Fabricas * fabrica2=new PhoneL();
+
+    Phone* myPhone1= new Phone();
+    Phone* myPhone2= new Phone();
+
+    myPhone1->setScreen(fabrica1->CreateScreen());
+    myPhone1->setCamera(fabrica1->CreateCamera());
+    myPhone1->setCase(fabrica1->CreateCase());
+
+    myPhone1->getScreen()->print();
+    myPhone1->getCamera()->print();
+    myPhone1->getCase()->print();
+
+    cout<<endl;
+
+    myPhone2->setScreen(fabrica2->CreateScreen());
+    myPhone2->setCamera(fabrica2->CreateCamera());
+    myPhone2->setCase(fabrica2->CreateCase());
+
+    myPhone2->getScreen()->print();
+    myPhone2->getCamera()->print();
+    myPhone2->getCase()->print();
+
+    return 0;
+}
+
+```
+
+```cpp
+#include <bits/stdc++.h>
+#include "Piezas.cpp"
+
+using namespace std;
+
+class Fabricas{
+    private:
+
+    public:
+        virtual Screen* CreateScreen()=0;
+        virtual Camera* CreateCamera()=0;
+        virtual Case* CreateCase()=0;
+};
+
+// Clase de telefono 1 
+class PhoneH:public Fabricas{
+    private:
+
+    public:
+        virtual Screen* CreateScreen();
+        virtual Camera* CreateCamera();
+        virtual Case* CreateCase();
+};
+
+Screen* PhoneH::CreateScreen(){
+    Screen* s=new ScreenOled();
+    return s;
+}
+Camera* PhoneH::CreateCamera(){
+    Camera* c=new CameraUp();
+    return c;
+}
+Case* PhoneH::CreateCase(){
+    Case* c=new CaseAcero();
+    return c;
+}
+
+// Clase de telefono 2 
+class PhoneL:public Fabricas{
+    private:
+
+    public:
+        virtual Screen* CreateScreen();
+        virtual Camera* CreateCamera();
+        virtual Case* CreateCase();
+};
+
+Screen* PhoneL::CreateScreen(){
+    Screen* s=new ScreenLCD();
+    return s;
+}
+Camera* PhoneL::CreateCamera(){
+    Camera* c=new CameraDown();
+    return c;
+}
+Case* PhoneL::CreateCase(){
+    Case* c=new CasePlastico();
+    return c;
+}
+
+```
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class Screen {
+    private:
+        
+    public:
+        virtual void print()=0;
+};
+
+class ScreenOled:public Screen{
+    private:
+    
+    public:
+        virtual void print(){
+            cout<<"Screen Oled"<<endl;
+        }
+};
+class ScreenLCD:public Screen{
+    private:
+    
+    public:
+        virtual void print(){
+            cout<<"Screen LCD"<<endl;
+        }
+};
+
+class Camera {
+    private:
+        
+    public:
+        virtual void print()=0;
+};
+
+class CameraUp:public Camera{
+    private:
+    
+    public:
+        virtual void print(){
+            cout<<"Camera 48 MPX"<<endl;
+        }
+};
+class CameraDown:public Camera{
+    private:
+    
+    public:
+        virtual void print(){
+            cout<<"Camer 4 MPX"<<endl;
+        }
+};
+
+class Case {
+    private:
+        
+    public:
+        virtual void print()=0;
+};
+
+class CaseAcero:public Case{
+    private:
+    
+    public:
+        virtual void print(){
+            cout<<"Case Acero"<<endl;
+        }
+};
+class CasePlastico:public Case{
+    private:
+    
+    public:
+        virtual void print(){
+            cout<<"Case Plastico"<<endl;
+        }
+};
+
+```
+
+```cpp
+#include <bits/stdc++.h>
+#include "Fabricas.cpp"
+
+using namespace std;
+
+class Phone{
+private:
+    Screen *Pantalla=NULL;
+    Camera *Camara=NULL;
+    Case *Carcasa=NULL;
+public:
+    void setScreen(Screen *pantalla){
+        Pantalla=pantalla;
+    }
+
+    void setCamera(Camera *camara){
+        Camara=camara;
+    }
+
+    void setCase(Case *carcasa){
+        Carcasa=carcasa;
+    }
+
+    Screen* getScreen(){
+        return Pantalla;
+    }
+
+    Camera* getCamera(){
+        return Camara;
+    }
+
+    Case* getCase(){
+        return Carcasa;
+    }
+};
+```
+
+### Caso de uso
+
+El ejemplo mas claro en donde creo que se implementa es el caso del juego Mario Maker donde se dividen las familias de objetos con su estilo grafico.
+
+# Estructurales
+
+## Proxy
+
+### Explicacion
+
+Proxy consta en manipular un objeto mediante otro que permite controlar tanto el acceso como las acciones realizadas.
+
+### Elementos
+
+Consta del objeto base que se quiere manipular y dos objetos que lo controlaran **main -> proxy -> objeto a controlar**
+
+### Ejemplo
+
+#### Java
+
+```java
+import video.Video;
+import video.Ivideo;
+import video.videoProxy;
+
+public class App {
+    public static void main(String[] args) {
+        Video miVideoHD = new Video();
+
+        Ivideo nubeVideo = new videoProxy();
+
+        nubeVideo.editarVideo(miVideoHD, 0);
+        nubeVideo.getCambio(miVideoHD);
+        nubeVideo.editarVideo(miVideoHD, 1);
+        nubeVideo.getCambio(miVideoHD);
+    }
+}
+
+```
+
+```java
+package video;
+
+public class Video {
+    private String Cambio;
+
+    public void setCambio(String cambio) {
+        Cambio = cambio;
+    }
+    public String getCambio() {
+        return Cambio;
+    }
+}
+
+```
+
+```java
+package video;
+
+import video.Video;
+
+public interface Ivideo {
+    Video editarVideo(Video miVideo,int Accion);
+    void getCambio(Video miVideo);
+}
+```
+
+```java
+package video;
+import video.Ivideo;
+
+
+public class videoHD implements Ivideo{
+
+    @Override
+    public Video editarVideo(Video miVideo, int Accion) {
+        switch (Accion) {
+            case 0:
+                miVideo.setCambio("Sin edicion");
+                break;
+            case 1:
+                miVideo.setCambio("Con edicion");
+                break;
+        }
+        return miVideo;
+    }
+
+    @Override
+    public void getCambio(Video miVideo) {
+        System.out.println(miVideo.getCambio());
+    }
+    
+}
+
+```
+
+```java
+package video;
+
+import video.Ivideo;
+import video.videoHD;
+
+public class videoProxy implements Ivideo {
+
+    private videoHD videoReal;
+
+    @Override
+    public Video editarVideo(Video miVideo, int Accion) {
+        if(videoReal==null){
+            videoReal= new videoHD();
+            return videoReal.editarVideo(miVideo, Accion);
+        }
+        else{
+            return videoReal.editarVideo(miVideo, Accion);
+        }
+    }
+
+    @Override
+    public void getCambio(Video miVideo) {
+        if(videoReal==null){
+            videoReal= new videoHD();
+            videoReal.getCambio(miVideo);;
+        }
+        else{
+            videoReal.getCambio(miVideo);;
+        }
+        
+    }
+
+    
+}
+```
+
+#### Python
+
+```python
+import Video
+import Videos
+
+miVideoFullHD4K = Video.video()
+
+nubeVideo = Videos.videoProxy()
+
+nubeVideo.editarVideo(nubeVideo,miVideoFullHD4K,0)
+nubeVideo.getCambio(nubeVideo,miVideoFullHD4K)
+nubeVideo.editarVideo(nubeVideo,miVideoFullHD4K,1)
+nubeVideo.getCambio(nubeVideo,miVideoFullHD4K)
+```
+
+```python
+class video:
+    def __init__(self,v='video'):
+        self.Cambio=v
+
+    def setCambio(self,c):
+        self.Cambio=c
+    
+    def getCambio(self):
+        return self.Cambio
+```
+
+```python
+from abc import abstractclassmethod
+import Video
+
+class Ivideo:
+    @abstractclassmethod
+    def editarVideo(miVideo,Act):
+        pass
+    @abstractclassmethod
+    def getCambio(miVideo):
+        pass
+
+class videoHD(Ivideo):
+    @staticmethod
+    def editarVideo(miVideo, Act):
+        if Act==0:
+            miVideo.setCambio("Sin edicion")
+        else:
+            miVideo.setCambio("Con edicion")
+        return miVideo
+    @staticmethod
+    def getCambio(miVideo):
+        print(miVideo.getCambio())
+
+class videoProxy(Ivideo):
+    videoReal=None 
+    @staticmethod
+    def editarVideo(self,miVideo,Act):
+        if self.videoReal==None:
+            self.videoReal=videoHD()
+            return self.videoReal.editarVideo(miVideo,Act)
+        else:
+            return self.videoReal.editarVideo(miVideo,Act)
+
+    @staticmethod
+    def getCambio(self,miVideo):
+        if self.videoReal==None:
+            self.videoReal=videoHD()
+            self.videoReal.getCambio(miVideo)
+        else:
+            self.videoReal.getCambio(miVideo)
+```
+
+#### C++
+
+```cpp
+#include <bits/stdc++.h>
+#include "proxy.cpp"
+
+using namespace std;
+
+int main() {
+    
+    video* miVideoHD = new video();
+
+    Ivideo* nubeVideo = new videoProxy();
+    
+    nubeVideo->editarVideo(miVideoHD, 0);
+    nubeVideo->getCambio(miVideoHD);
+    nubeVideo->editarVideo(miVideoHD, 1);
+    nubeVideo->getCambio(miVideoHD);
+
+
+    return 0;
+}
+```
+
+```cpp
+#include <bits/stdc++.h>
+#include "video.cpp"
+
+using namespace std;
+//Interfaz
+class Ivideo{
+    private:
+        
+    public:
+        virtual video* editarVideo(video* miVideo,int Accion)=0;
+        virtual void getCambio(video* miVideo)=0;
+};
+//Implementacion pero mas pesada
+class videoHD:public Ivideo{
+    private:
+        
+    public:
+        virtual video* editarVideo(video* miVideo,int Accion);
+        virtual void getCambio(video* miVideo);
+};
+
+video* videoHD::editarVideo(video* miVideo,int Accion){
+    switch (Accion) {
+            case 0:
+                miVideo->setCambio("Sin edicion");
+                break;
+            case 1:
+                miVideo->setCambio("Con edicion");
+                break;
+        }
+        return miVideo;
+}
+
+void videoHD::getCambio(video* miVideo){
+    cout<<miVideo->getCambio()<<endl;
+}
+
+//Proxy
+class videoProxy:public Ivideo{
+    private:
+        videoHD* videoReal;
+    public:
+        virtual video* editarVideo(video* miVideo,int Accion);
+        virtual void getCambio(video* miVideo);
+};
+
+video* videoProxy::editarVideo(video* miVideo,int Accion){
+    if(videoReal==NULL){
+        videoReal= new videoHD();
+        return videoReal->editarVideo(miVideo, Accion);
+    }
+    else{
+        return videoReal->editarVideo(miVideo, Accion);
+    }
+}
+void videoProxy::getCambio(video* miVideo){
+    if(videoReal==NULL){
+        videoReal= new videoHD();
+        videoReal->getCambio(miVideo);;
+    }
+    else{
+        videoReal->getCambio(miVideo);;
+    }
+}
+```
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class video{
+    private:
+        string Cambio;
+    public:
+        void setCambio(string cambio);
+        string getCambio();
+};
+
+void video::setCambio(string cambio){
+    Cambio=cambio;
+}
+string video::getCambio(){
+    return Cambio;
+}
+```
+
+### Caso de uso
+
+En redes se es un termino comun de uso, pero tambien si queremos manipular archivos a distancia, sin la necesidad de tenerlos descargados.
+
+## Decorator
+
+### Explicacion
+
+### Elementos
+
+### Ejemplo
+
+#### Java
+
+```java
+
+```
+
+#### Python
+
+```python
+
+```
+
+#### C++
+
+```cpp
+
+```
+
+### Caso de uso
