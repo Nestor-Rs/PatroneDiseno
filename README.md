@@ -2692,26 +2692,164 @@ Unity usa este tipo de patron para unir sus objeto, los cuales decienden de Game
 
 ### Explicacion
 
+El facade es un patron de diseño que permite trabajar varios objetos mediante una fachada
+
 ### Elementos
+
+Dos objetos concretos
+Una fachada que controle los objetos
 
 ### Ejemplo
 
 #### Java
 
 ```java
+public class FacadeMain {
+    public static void main(String[] args){
+        Fachada animal = new Fachada();
+        animal.crear();
+    }
+}
+
+```
+
+```java
+public class Fachada {
+    private Perro perro;
+    private Gato gato;
+
+    public Fachada(){
+        perro = new Perro();
+        gato = new Gato();
+    }
+
+    public void crear(){
+        gato.crearGato();
+        perro.crearPerro();
+    }
+}
+```
+
+```java
+public class Gato {
+    
+    public void crearGato(){
+        System.out.println("Gato");
+    }
+}
+```
+
+```java
+public class Perro {
+    
+    public void crearPerro(){
+        System.out.println("Perro");
+    }
+}
 
 ```
 
 #### Python
 
 ```python
+import Facade
+
+animal = Facade.Fachada()
+
+animal.crear()
+```
+
+```python
+class Gato:
+    #@staticmethod
+    def crearGato(self):
+        print("Gato")
+
+class Perro:
+    #@staticmethod
+    def crearPerro(self):
+        print("Perro")
+
+class Fachada:
+
+    perro=None
+    gato=None
+
+    def __init__(self):
+        self.perro=Perro()
+        self.gato=Gato()
+
+    def crear(self):
+        self.perro.crearPerro()
+        self.gato.crearGato()
 
 ```
 
 #### C++
 
 ```cpp
+#include <bits/stdc++.h>
+#include "Facade.cpp"
 
+using namespace std;
+
+int main() {
+
+    Fachada* animal = new Fachada();
+
+    animal->crear();
+
+    return 0;
+}
+```
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+//clases
+class Perro{
+    private:
+
+    public:
+        void crearPerro();
+};
+
+class Gato{
+    private:
+
+    public:
+        void crearGato();
+};
+
+class Fachada{
+    private:
+        Perro* perro;
+        Gato* gato;
+    public:
+        Fachada();
+        void crear();
+};
+//Funciones
+void Perro::crearPerro(){
+    cout<<"Perro \n";
+}
+
+void Gato::crearGato(){
+    cout<<"Gato \n";
+}
+
+//funciones Fachada
+
+Fachada::Fachada(){
+    this->perro=new Perro();
+    this->gato=new Gato();
+}
+
+void Fachada::crear(){
+    this->perro->crearPerro();
+    this->gato->crearGato();
+}
 ```
 
 ### Caso de uso
@@ -3757,85 +3895,547 @@ Usado en videojuegos para restaurar puntos de guardado
 
 ### Explicacion
 
+Este patron de diseño busca notificar sobre los cambios que le pasan a los objetos
+
 ### Elementos
+
+Una interfaz donde se implementa a los concretos
+Los sujetos a quienes se les notifica
+El mensaje
 
 ### Ejemplo
 
 #### Java
 
 ```java
+public class ObservadorMain {
+    public static void main(String[] args) {
+        ObservadorUno s1 = new ObservadorUno();
+        ObservadorDos s2 = new ObservadorDos();
+         
+        SujetoPublicador p = new SujetoPublicador();
+         
+        p.adjuntar(s1);
+        p.adjuntar(s2);
+         
+        p.notificar(new Mensaje("Mensaje"));
+        p.notificar(new Mensaje("Hola"));
+    }
+}
+```
 
+```java
+public interface Observador {
+    public void actualizar(Mensaje m);
+}
+```
+
+```java
+public class ObservadorUno implements Observador {
+    @Override
+    public void actualizar(Mensaje m) {
+        System.out.println("ObservadorUno: " + m.getContenidoMensaje());
+    }
+}
+```
+
+```java
+public class ObservadorDos implements Observador {
+    @Override
+    public void actualizar(Mensaje m) {
+        System.out.println("ObservadorDos: " + m.getContenidoMensaje());
+    }
+}
+```
+
+```java
+
+  
+public class Mensaje{
+    final String contenidoMensaje;
+     
+    public Mensaje (String m) {
+        this.contenidoMensaje = m;
+    }
+ 
+    public String getContenidoMensaje() {
+        return contenidoMensaje;
+    }
+}
+```
+
+```java
+public interface Sujeto{
+    public void adjuntar(Observador o);
+    public void notificar(Mensaje m);
+}
+```
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+ 
+public class SujetoPublicador implements Sujeto {
+     
+    private List<Observador> observadores = new ArrayList<>();
+ 
+    @Override
+    public void adjuntar(Observador o) {
+        observadores.add(o);
+    }
+ 
+    @Override
+    public void notificar(Mensaje m) {
+        for(Observador o: observadores) {
+            o.actualizar(m);
+        }
+    }
+}
 ```
 
 #### Python
 
 ```python
+import Observador
+import Mensaje
+import Sujeto
 
+observadorUno = Observador.ObservadorUno()
+observadorDos = Observador.ObservadorDos()
+sujetoPublicador = Sujeto.SujetoPublicador()
+sujetoPublicador.adjuntar(observadorUno)
+sujetoPublicador.adjuntar(observadorDos)
+sujetoPublicador.notificar(Mensaje.Mensaje("Mensaje"))
 ```
 
-#### C++
+```python
+class Mensaje():
+    
+    contenidoMensaje=''
 
-```cpp
+    def __init__(self, m):
+        self.contenidoMensaje = m
 
+    def getContenidoMensaje(self):
+        return self.contenidoMensaje
+```
+
+```python
+from Mensaje import *
+from abc import abstractmethod
+
+class Observador():
+    @abstractmethod
+    def actualizar(Mensaje):
+        pass
+
+class ObservadorUno(Observador):
+    @staticmethod
+    def actualizar(Mensaje):
+        print("ObservadorUno: ", Mensaje.getContenidoMensaje())
+
+class ObservadorDos(Observador):
+    @staticmethod
+    def actualizar(Mensaje):
+        print("ObservadorDos: ", Mensaje.getContenidoMensaje())
+```
+
+```python
+from abc import abstractmethod
+import Observador
+
+class Sujeto():
+    @abstractmethod
+    def adjuntar(self):
+        pass
+
+    @abstractmethod
+    def notificar(self):
+        pass
+
+class SujetoPublicador(Sujeto):
+
+    list=[]
+    
+    def adjuntar(self, o):
+        self.list.append(o)
+
+    def notificar(self, Mensaje):
+        for o in self.list:
+            o.actualizar(Mensaje)
 ```
 
 ### Caso de uso
 
-
+Ejemplos de Inventarios, notificaciones de redes sociales, etc.
 
 ## Chain os responsability
 
 ### Explicacion
 
+Este patron permite crear (como su nombre lo dice) una cadena de responsibilidad al sistema
+
 ### Elementos
+
+Una interfaz donde decienden los puntos responsables
 
 ### Ejemplo
 
 #### Java
 
 ```java
+public class App {
+    public static void main(String[] args) {
+        IHandler cajero = new CajeroAutomatico();
+        IHandler sucursal = new Sucursal();
+        IHandler asesor = new AsesorFinanciero();
+        cajero.setNext(sucursal);
+        sucursal.setNext(asesor);
+        System.out.println("Maximos:\nCajero: 9000\nSucursal: 50000\nAsesor:250000\n");
 
+        int monto = 10000;
+        System.out.println("Le pedimos al cajero retirar "+monto);
+        cajero.handle(monto);
+
+        monto = 200000;
+        System.out.println("\nLe pedimos al cajero retirar "+monto);
+        cajero.handle(monto);
+
+        monto = 500;
+        System.out.println("\nLe pedimos al cajero retirar "+monto);
+        cajero.handle(monto);
+
+        monto = 123456789;
+        System.out.println("\nLe pedimos al cajero retirar "+monto);
+        cajero.handle(monto);
+    }
+}
+```
+
+```java
+public class AsesorFinanciero extends BaseHandler{
+    
+    public AsesorFinanciero(){
+        super();
+        this.maxRequest = 250000;
+    }
+    @Override
+    public String toString(){
+        return "Asesor Financiero";
+    }
+}
+```
+
+```java
+public class BaseHandler implements IHandler{
+    protected IHandler next;
+    protected int maxRequest;
+
+    public void handle(int request){
+        if(canHandle(request)){
+            System.out.println("Se entregan: " + request);
+        }
+        else if(next != null){
+            System.out.println("Se pasa al siguiente en la cadena: "+this.next);
+            next.handle(request);
+        }
+        else{
+            System.out.println("Lo sentimos pero excedio el limite de retiro");
+        }
+    }
+
+    public void setNext(IHandler next){
+        this.next = next;
+    }
+
+    public boolean canHandle(int request){
+        return request <= maxRequest;
+    }
+}
+```
+
+```java
+public class CajeroAutomatico extends BaseHandler{
+    
+    public CajeroAutomatico(){
+        super();
+        this.maxRequest = 9000;
+    }
+    @Override
+    public String toString(){
+        return "Cajero automatico";
+    }
+}
+```
+
+```java
+public interface IHandler{
+    public void handle(int request);
+    public void setNext(IHandler next);
+}
+```
+
+```java
+public class Sucursal extends BaseHandler{
+
+    public Sucursal(){
+        super();
+        this.maxRequest = 50000;
+    }
+    @Override
+    public String toString(){
+        return "Sucursal";
+    }
+}
 ```
 
 #### Python
 
 ```python
+from abc import ABC, abstractmethod
 
-```
+class IHandler(ABC):
+    @abstractmethod
+    def handle(self, request):
+        pass
+    @abstractmethod
+    def setNext(self, next):
+        pass
 
-#### C++
+class BaseHandler(IHandler):
 
-```cpp
+    def __init__(self, max):
+        super().__init__()
+        self.maxRequest = max
+        self.next = None
+    
+    def setNext(self, next):
+        self.next = next
 
+    def handle(self, request):
+        if(self.canHandle(request)):
+            print("Se entregan: "+str(request))
+        elif(self.next != None):
+            print("Se pasa al siguiente en la cadena: "+str(self.next))
+            self.next.handle(request)
+        else:
+            print("Lo sentimos pero excedio el limite de retiro")
+    
+    def canHandle(self, request):
+        return request <= self.maxRequest
+
+class CajeroAutomatico(BaseHandler):
+    def __init__(self):
+        super().__init__(9000)
+
+    def __str__(self):
+        return "Cajero automatico"
+
+class Sucursal(BaseHandler):
+    def __init__(self):
+        super().__init__(50000)
+    
+    def __str__(self):
+        return "Sucursal"
+    
+class AsesorFinanciero(BaseHandler):
+    def __init__(self):
+        super().__init__(250000)
+    
+    def __str__(self):
+        return "Asesor Financiero"
+    
+
+def main():
+    cajero = CajeroAutomatico()
+    sucursal = Sucursal()
+    asesor = AsesorFinanciero()
+    cajero.setNext(sucursal)
+    sucursal.setNext(asesor)
+
+    cajero.handle(900)
+    cajero.handle(45000)
+    cajero.handle(100000)
+    cajero.handle(9999999999)
+
+if __name__ == "__main__":
+    main()
 ```
 
 ### Caso de uso
 
+Ejemplo creado de Peticiones de transacciones.
 
 ## Mediator
 
 ### Explicacion
 
+Este patron de comportamiento se basa en tener (como su nombre lo indica) un mediador entre las instancias de los objetos
+
 ### Elementos
+
+Los objetos que se comunican
+El mediador
 
 ### Ejemplo
 
 #### Java
 
 ```java
+public class App {
+    public static void main(String[] args) {
+       User robert = new User("Robert");
+       User john = new User("John");
+ 
+       robert.sendMessage("Hi! John!");
+       john.sendMessage("Hello! Robert!");
+    }
+ }
+```
 
+```java
+import java.util.Date;
+
+public class ChatRoom {
+   public static void showMessage(User user, String message){
+      System.out.println(new Date().toString() + " [" + user.getName() + "] : " + message);
+   }
+}
+```
+
+```java
+public class User {
+    private String name;
+ 
+    public String getName() {
+       return name;
+    }
+ 
+    public void setName(String name) {
+       this.name = name;
+    }
+ 
+    public User(String name){
+       this.name  = name;
+    }
+ 
+    public void sendMessage(String message){
+       ChatRoom.showMessage(this,message);
+    }
+ }
 ```
 
 #### Python
 
 ```python
+from User import *
 
+robert = User("Roberto")
+john = User("John")
+
+robert.sendMessage("Hi!, John")
+john.sendMessage("Hello!, Robert")
+```
+
+```python
+import time
+class ChatRoom:
+    @staticmethod
+    def showMessage(user, message):
+        print(time.strftime("%I:%M:%S") + " [" + user.getName() + "] : " + message)
+```
+
+```python
+from ChatRoom import *
+
+class User:
+
+    def __init__(self, name):
+        self.name = name
+    
+    def getName(self):
+        return self.name
+    def setName(self, name):
+        self.name = name
+    def sendMessage(self, message):
+        ChatRoom.showMessage(self, message)
 ```
 
 #### C++
 
 ```cpp
+#include <bits/stdc++.h>
+#include "Mediator.cpp"
 
+using namespace std;
+
+int main() {
+
+    User* robert = new User("Robert");
+    User* john = new User("John");
+
+    robert->sendMessage("Hi! John!");
+    john->sendMessage("Hello! Robert!");
+
+    return 0;
+}
+```
+
+```cpp
+#include <bits/stdc++.h>
+#include <time.h>
+
+using namespace std;
+
+//clases
+
+class User;
+
+class ChatRoom{
+    private:
+        
+    public:
+        void shotMessage(User*,string);
+};
+
+class User{
+    private:
+        ChatRoom* room;
+        string name;
+    public:
+        User(string);
+        void setName(string);
+        string getName();
+        void sendMessage(string);
+};
+
+//funciones chat
+void ChatRoom::shotMessage(User* user, string message){
+    time_t rawTime;
+    cout<<ctime(&rawTime)<<" [ "<<user->getName()<<" ] : "<< message<<endl;
+}
+
+
+//funciones user
+
+User::User(string name){
+    this->room=new ChatRoom();
+    this->name=name;
+}
+
+void User::setName(string name){
+    this->name=name;
+}
+
+string User::getName(){
+    return this->name;
+}
+
+void User::sendMessage(string message){
+    this->room->shotMessage(this,message);
+}
 ```
 
 ### Caso de uso
+
+Un chat grupal.
